@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamariz Statistics</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      margin: 1rem;
+      background: #ffffff;
+      color: #222;
+    }
+    h1 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+      font-weight: normal;
+      text-align: center;
+      margin-top: 0;
+      color: #555;
+    }
+    button {
+      font-size: 1rem;
+      padding: 0.6rem 1.2rem;
+      margin: 0.3rem 0;
+      width: 100%;
+      max-width: 320px;
+      display: block;
+      border: 1px solid #444;
+      border-radius: 6px;
+      background-color: #f4f4f4;
+      color: #222;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #e0e0e0;
+    }
+    #tulos {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      font-weight: normal;
+      text-align: center;
+    }
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .result-box {
+      border: 2px solid #222;
+      padding: 1rem;
+      background: #fdfdfd;
+      display: inline-block;
+      width: 100%;
+      max-width: 26rem;
+      font-size: 1.3rem;
+      font-family: 'Courier New', monospace;
+    }
+    .probability-text {
+      font-size: 0.95rem;
+      font-family: 'Courier New', monospace;
+      color: #444;
+    }
+  </style>
+</head>
+<body style="text-align: center;">
+  <h1>University of Birmingham</h1>
+  <h2>ACAAN Statistical Analysis Tool</h2>
+  <div class="button-container">
+    <button onclick="arvoJako()">Randomize</button>
+    <button onclick="arvoUusiKortti()">New card</button>
+    <button onclick="arvoUusiSumma()">New location</button>
+  </div>
+  <div id="tulos"></div>
+
+  <script>
+    const symbolit = {"H": "♥", "D": "♦", "S": "♠", "C": "♣"};
+
+    const pakka1 = [ "4C", "2H", "7D", "3C", "4H", "6D", "AS", "5H", "9S", "2S",
+      "QH", "3D", "QC", "8H", "6S", "5S", "9H", "KC", "2D", "JH",
+      "3S", "8S", "6H", "10C", "5D", "KD", "2C", "3H", "8D", "5C",
+      "KS", "JD", "8C", "10S", "KH", "JC", "7S", "10H", "AD", "4S",
+      "7H", "4D", "AC", "9C", "JS", "QD", "7C", "QS", "10D", "6C",
+      "AH", "9D"
+    ];
+
+    const part1 = pakka1.slice(26, 39);
+    const part2 = pakka1.slice(39, 52).reverse();
+    const part3 = pakka1.slice(0, 13);
+    const part4 = pakka1.slice(13, 26).reverse();
+    const secondPack = [
+      ...part1.slice(0, 11).reverse(), ...part1.slice(11),
+      ...part2, ...part3.slice(0, 11).reverse(), ...part3.slice(11), ...part4
+    ];
+
+    const tuplapakka0 = [];
+    for (let i = 0; i < 52; i++) {
+      tuplapakka0.push(pakka1[i]);
+      tuplapakka0.push(secondPack[i]);
+    }
+    const tuplapakka2 = [...tuplapakka0].reverse();
+
+    let nykyinenSumma = null;
+    let nykyinenKortti = null;
+    let edellinenTulos = null;
+
+    function muodostaKorttiSymbolina(kortti) {
+      const maa = kortti.slice(-1);
+      const arvo = kortti.slice(0, -1);
+      const symbol = symbolit[maa];
+      const color = (maa === "H" || maa === "D") ? 'red' : 'black';
+      return `${arvo}<span style='color:${color}; font-size: 1.4em;'>${symbol}</span>`;
+    }
+
+    function onSamaTulos(a, b) {
+      return a && b && a.kortti === b.kortti && a.metodi === b.metodi && a.n === b.n && a.m === b.m;
+    }
+
+    function naytaTulos({ kortti, metodi, n, m }) {
+      const korttiSymboli = muodostaKorttiSymbolina(kortti);
+      const nStr = String(n).padStart(2, '0');
+      const mStr = String(m).padStart(2, '0');
+      const metodiStr = metodi === 0 ? "0" : (n === (n + m) ? "2" : "1");
+      const todennakoisyys = `${metodiStr},${nStr}${mStr}`;
+
+      document.getElementById("tulos").innerHTML =
+        `<div class="result-box">
+          Card: ${korttiSymboli}, at location: ${n + m}
+        </div>
+        <br><br><br>
+        <span class="probability-text">Probability: ${todennakoisyys}</span>`;
+    }
+  </script>
+</body>
+</html>
