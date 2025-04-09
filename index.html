@@ -23,7 +23,7 @@
       text-align: center;
     }
     h1 {
-      font-size: 2rem;
+      font-size: 2.2rem;
       margin-bottom: 0.25rem;
     }
     h2 {
@@ -64,7 +64,7 @@
       background: #f9f9fc;
       display: inline-block;
       width: 100%;
-      max-width: 130px;
+      max-width: 300px;
       font-size: 1.5rem;
       font-family: 'Courier New', monospace;
       box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
@@ -155,7 +155,6 @@
 
     function arvoUusiKortti() {
       if (nykyinenSumma === null) return;
-
       const vaihtoehdot = [];
       [0, 2].forEach(metodi => {
         const pakka = metodi === 0 ? tuplapakka0 : tuplapakka2;
@@ -175,7 +174,6 @@
           }
         }
       });
-
       if (vaihtoehdot.length > 0) {
         const satunnainen = vaihtoehdot[Math.floor(Math.random() * vaihtoehdot.length)];
         edellinenTulos = satunnainen;
@@ -208,7 +206,6 @@
           }
         }
       });
-
       if (vaihtoehdot.length > 0) {
         const satunnainen = vaihtoehdot[Math.floor(Math.random() * vaihtoehdot.length)];
         edellinenTulos = satunnainen;
@@ -238,7 +235,7 @@
   </script>
 
   <div style="position: fixed; bottom: 0.5rem; left: 1rem; font-size: 0.8rem; color: #666; font-family: Georgia, serif;">
-    v1.0.1
+    v1.0.2
   </div>
 </body>
 </html>
