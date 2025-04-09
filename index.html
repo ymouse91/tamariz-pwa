@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="fi">
-<head>
-  <meta charset="UTF-8" />
+<link rel="manifest" href="manifest.json">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('service-worker.js');
+        });
+      }
+    </script>
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tamariz Statistics</title>
   <style>
@@ -115,6 +122,97 @@
       const symbol = symbolit[maa];
       const color = (maa === "H" || maa === "D") ? 'red' : 'black';
       return `${arvo}<span style='color:${color}; font-size: 1.4em;'>${symbol}</span>`;
+    }
+
+    function arvoJako() {
+      const mahdolliset = [];
+      [0, 2].forEach(metodi => {
+        const pakka = metodi === 0 ? tuplapakka0 : tuplapakka2;
+        for (let i = 0; i < pakka.length; i++) {
+          const kortti = pakka[i];
+          for (let summa = 1; summa <= 45; summa++) {
+            for (let n = 0; n <= summa; n++) {
+              const m = summa - n;
+              const index = 2 * n + m - 1;
+              const maxVisibleIndex = summa - 1;
+              if ((m - n) < 30 && index === i && index >= maxVisibleIndex) {
+                mahdolliset.push({ kortti, metodi, n, m });
+                break;
+              }
+            }
+          }
+        }
+      });
+
+      const satunnainen = mahdolliset[Math.floor(Math.random() * mahdolliset.length)];
+      nykyinenSumma = satunnainen.n + satunnainen.m;
+      nykyinenKortti = satunnainen.kortti;
+      edellinenTulos = satunnainen;
+      naytaTulos(satunnainen);
+    }
+
+    function arvoUusiKortti() {
+      if (nykyinenSumma === null) return;
+
+      const vaihtoehdot = [];
+      [0, 2].forEach(metodi => {
+        const pakka = metodi === 0 ? tuplapakka0 : tuplapakka2;
+        for (let i = 0; i < pakka.length; i++) {
+          const kortti = pakka[i];
+          for (let n = 0; n <= nykyinenSumma; n++) {
+            const m = nykyinenSumma - n;
+            const index = 2 * n + m - 1;
+            const maxVisibleIndex = nykyinenSumma - 1;
+            if ((m - n) < 30 && index === i && index >= maxVisibleIndex) {
+              const mahdollinen = { kortti, metodi, n, m };
+              if (!onSamaTulos(mahdollinen, edellinenTulos)) {
+                vaihtoehdot.push(mahdollinen);
+              }
+              break;
+            }
+          }
+        }
+      });
+
+      if (vaihtoehdot.length > 0) {
+        const satunnainen = vaihtoehdot[Math.floor(Math.random() * vaihtoehdot.length)];
+        edellinenTulos = satunnainen;
+        nykyinenKortti = satunnainen.kortti;
+        naytaTulos(satunnainen);
+      }
+    }
+
+    function arvoUusiSumma() {
+      if (!nykyinenKortti) return;
+      const vaihtoehdot = [];
+      [0, 2].forEach(metodi => {
+        const pakka = metodi === 0 ? tuplapakka0 : tuplapakka2;
+        for (let i = 0; i < pakka.length; i++) {
+          if (pakka[i] === nykyinenKortti) {
+            for (let summa = 1; summa <= 45; summa++) {
+              for (let n = 0; n <= summa; n++) {
+                const m = summa - n;
+                const index = 2 * n + m - 1;
+                const maxVisibleIndex = summa - 1;
+                if ((m - n) < 30 && index === i && index >= maxVisibleIndex) {
+                  const mahdollinen = { kortti: nykyinenKortti, metodi, n, m };
+                  if (!onSamaTulos(mahdollinen, edellinenTulos)) {
+                    vaihtoehdot.push(mahdollinen);
+                  }
+                  break;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      if (vaihtoehdot.length > 0) {
+        const satunnainen = vaihtoehdot[Math.floor(Math.random() * vaihtoehdot.length)];
+        edellinenTulos = satunnainen;
+        nykyinenSumma = satunnainen.n + satunnainen.m;
+        naytaTulos(satunnainen);
+      }
     }
 
     function onSamaTulos(a, b) {
