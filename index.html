@@ -58,22 +58,27 @@
       align-items: center;
       gap: 0.4rem;
     }
-    .result-box {
-      border: 2px solid #222;
-      padding: 1rem;
-      background: #fdfdfd;
-      display: inline-block;
-      width: 100%;
-      max-width: 26rem;
-      font-size: 1.3rem;
-      font-family: 'Courier New', monospace;
-    }
+    
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
     .probability-text {
       font-size: 0.95rem;
       font-family: 'Courier New', monospace;
       color: #444;
     }
-  </style>
+  .result-box {
+      border: 2px solid #222;
+      padding: 1rem;
+      background: #f9f9fc;
+      display: inline-block;
+      width: 100%;
+      max-width: 320px;
+      font-size: 1.3rem;
+      font-family: 'Courier New', monospace;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+</style>
 </head>
 <body style="text-align: center;">
   <h1>University of Birmingham</h1>
@@ -228,7 +233,7 @@
 
       document.getElementById("tulos").innerHTML =
         `<div class="result-box">
-          Card: ${korttiSymboli}, at location: ${n + m}
+          Card: ${korttiSymboli}<br>Location: ${n + m}
         </div>
         <br><br><br>
         <span class="probability-text">Probability: ${todennakoisyys}</span>`;
